@@ -26,7 +26,7 @@ namespace Pluto_FactorySettings
         }
         public void UpdateTextBox16(String str) {
             UpdateTextBoxDelegate d = new UpdateTextBoxDelegate(UpdataTextBox16);
-            this.Invoke(d,str);
+            this.BeginInvoke(d, str);
         }
         private void UpdataTextBox16(String str){
             DebugTextLength += str.Length;
@@ -41,7 +41,7 @@ namespace Pluto_FactorySettings
         }
         public void UpdateTextBox5(String str) {
             UpdateTextBoxDelegate d = new UpdateTextBoxDelegate(UpdataTextBox5);
-            this.Invoke(d,str);
+            this.BeginInvoke(d,str);
         }
         private void UpdataTextBox5(String str){
             textBox5.Text = str;
