@@ -132,7 +132,7 @@ namespace Pluto_FactorySettings
             textBox15.Text = "123456";// info.password;
             textBox13.Text = "";//info.addr;
             textBox14.Text = "";//info.sn;
-            textBox17.Text = "FFFFFFFF";//info.VID.ToString();
+            textBox17.Text = "4294967295";//info.VID.ToString();
             textBox18.Text = "01";//info.PID.ToString();
             textBox19.Text = "2019-03-01";//info.product_date;
         }
@@ -180,29 +180,6 @@ namespace Pluto_FactorySettings
         {
             textBox16.Text = "";
         }
-        private static byte[] SerialPort_ReadBuffer = new byte[1024];
-        private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            try
-            {
-                int len = SerialPort1.Read(SerialPort_ReadBuffer, 0, 1024);
-                if (len > 0)
-                {
-                    byte[] buf = new byte[len];
-                    System.Array.Copy(SerialPort_ReadBuffer, 0, buf, 0, len);
-                    MySerialPort.InputMessage(buf, len);
-                }
-                //readFlag++;
-                //Invoke(interfaceUpdateHandle, readFlag.ToString(),temp);
-            }
-            catch
-            {
-               // MessageBox.Show("串口接收错误");
-            
-            }
-            
-        }
-
         private void button4_Click(object sender, EventArgs e)
         {
             FactorySettings.ReadDeviceInfo();
@@ -233,7 +210,7 @@ namespace Pluto_FactorySettings
             try
             {
                 info.PID = int.Parse(textBox18.Text);
-                info.VID = int.Parse(textBox17.Text);
+                info.VID =(int)long.Parse(textBox17.Text);
                 info.product_date = textBox19.Text;
                 info.sn = textBox14.Text;
                 info.addr = textBox13.Text;
@@ -269,6 +246,47 @@ namespace Pluto_FactorySettings
         private void textBox19_TextChanged(object sender, EventArgs e)
         {
 
+        }
+        private static byte[] RxBuffer = new byte[1024];
+        private static byte[] SerialPort_ReadBuffer = new byte[4096];
+        private static int SerialPort_RxCnt = 0;
+        private Object Critical = new Object();
+        private void SerialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            try
+            {
+                int len = SerialPort1.Read(RxBuffer, 0, 1024);
+                if (len > 0)
+                {
+                    lock (Critical)
+                    {
+                        if ((SerialPort_RxCnt + len) >= 4096)
+                        {
+                            SerialPort_RxCnt = 0;
+                        }
+                        System.Array.Copy(RxBuffer, 0, SerialPort_ReadBuffer, SerialPort_RxCnt, len);
+                        SerialPort_RxCnt += len;
+                    }
+                }
+            }
+            catch
+            {
+                // MessageBox.Show("串口接收错误");
+
+            }
+
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+        
+            if(SerialPort_RxCnt>0)
+            {
+                lock (Critical)
+                {
+                    MySerialPort.InputMessage(SerialPort_ReadBuffer, SerialPort_RxCnt);
+                    SerialPort_RxCnt = 0;
+                }
+            }
         }
     }
 }
