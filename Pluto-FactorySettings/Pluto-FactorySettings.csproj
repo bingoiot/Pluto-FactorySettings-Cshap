@@ -81,7 +81,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -107,6 +107,7 @@
     <None Include="Resources\Close.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Newtonsoft.Json.dll" />
     <None Include="Resources\Open.jpg" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="20190314045343331_easyicon_net_512.ico" />
+    <None Include="Newtonsoft.Json.dll" />
     <Content Include="Resources\logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
