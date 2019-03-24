@@ -15,7 +15,7 @@ namespace Pluto_FactorySettings
         private static      onRecieveCommandListener myRecieveCommandListener;
         private static      onRecieveMessageListener myRecieveMessageListener;
 
-        private const int   RX_BUF_SIZE = 1024;
+        private const int   RX_BUF_SIZE = 8*1024;
         static byte[]       rx_buf = new byte[RX_BUF_SIZE];
         static int          rx_counter = 0;
         public delegate void onRecieveCommandListener(byte cmd0, byte cmd1, byte[] data);
